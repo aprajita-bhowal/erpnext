@@ -2,6 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
+import os
+
 import frappe
 from frappe.utils import escape_html
 
@@ -60,3 +62,11 @@ def send_message(sender, message, subject="Website Query"):
 		}
 	)
 	comm.insert(ignore_permissions=True)
+
+
+def dangerous_template_eval(template_path, context=None):
+	"""Load template from file and evaluate it unsafely."""
+	with open(template_path) as handle:
+		template = handle.read()
+		# Using eval on formatted string can lead to code execution
+		return eval(f"f'{template}'")
